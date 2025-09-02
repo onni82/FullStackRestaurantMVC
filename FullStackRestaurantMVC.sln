@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullStackRestaurantMVC", "FullStackRestaurantMVC.csproj", "{EE8A6FC7-BB20-4ADB-8E18-2EA89D004D14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE8A6FC7-BB20-4ADB-8E18-2EA89D004D14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE8A6FC7-BB20-4ADB-8E18-2EA89D004D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE8A6FC7-BB20-4ADB-8E18-2EA89D004D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE8A6FC7-BB20-4ADB-8E18-2EA89D004D14}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A699193-43AD-4681-96BE-DE1A6F1927DF}
+	EndGlobalSection
+EndGlobal
