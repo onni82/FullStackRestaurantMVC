@@ -15,7 +15,7 @@ namespace FullStackRestaurantMVC.Services
             _httpClient.BaseAddress = new Uri(config["ApiBaseUrl"] ?? "https://localhost:7232");
         }
 
-        public void SetToken(string? token)
+        public void SetToken(string token)
         {
             _jwtToken = token;
             _httpClient.DefaultRequestHeaders.Authorization =
