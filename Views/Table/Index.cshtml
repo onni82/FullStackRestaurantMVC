@@ -1,0 +1,28 @@
+﻿@model IEnumerable<FullStackRestaurantMVC.Models.Table>
+@{
+    ViewData["Title"] = "Bord";
+}
+<h1>Bord</h1>
+<a asp-action="Create" class="btn btn-primary mb-3">Lägg till bord</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Bordnummer</th>
+            <th>Platser</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.TableNumber</td>
+                <td>@t.Seats</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-warning btn-sm">Ändra</a>
+                    <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger btn-sm">Ta bort</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
