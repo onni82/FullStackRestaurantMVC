@@ -1,5 +1,35 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">Kim's Kitchen</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Hem</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Menu" asp-action="Index">Meny</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Booking" asp-action="Index">Bokning</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Table" asp-action="Index">Bord</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Customer" asp-action="Index">Kunder</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Auth" asp-action="Login">Admininloggning</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
