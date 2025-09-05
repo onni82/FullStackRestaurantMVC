@@ -1,0 +1,22 @@
+﻿@model FullStackRestaurantMVC.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<h1>Admin Login</h1>
+<form asp-action="Login" method="post" class="w-50">
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label"></label>
+        <input asp-for="Username" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Logga in</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:red">@ViewBag.Error</p>
+}

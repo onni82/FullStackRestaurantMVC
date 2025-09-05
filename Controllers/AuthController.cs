@@ -1,4 +1,5 @@
-﻿using FullStackRestaurantMVC.Services;
+﻿using FullStackRestaurantMVC.Models;
+using FullStackRestaurantMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -17,9 +18,9 @@ namespace FullStackRestaurantMVC.Controllers
         public IActionResult Login() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var res = await _apiService.PostAsync<JsonElement>("api/Auth/login", new { username, password });
+            var res = await _apiService.PostAsync<JsonElement>("api/Auth/login", new { model.Username, model.Password });
 
             if (res.ValueKind == JsonValueKind.Undefined)
             {
