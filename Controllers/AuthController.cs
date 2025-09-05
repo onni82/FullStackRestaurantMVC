@@ -2,7 +2,7 @@
 
 namespace FullStackRestaurantMVC.Controllers
 {
-    public class AdminController : Controller
+    public class AuthController : Controller
     {
         public IActionResult Index()
         {
