@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<FullStackRestaurantMVC.Models.Booking>
 @{
+    ViewData["Title"] = "Bokningar";
 }
+<h1>Bokningar</h1>
+<a asp-action="Create" class="btn btn-primary mb-3">Ny bokning</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Start</th>
+            <th>Slut</th>
+            <th>Gäster</th>
+            <th>Bord</th>
+            <th>Kund</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.Start</td>
+                <td>@booking.End</td>
+                <td>@booking.Guests</td>
+                <td>@booking.TableId</td>
+                <td>@booking.CustomerId</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-danger btn-sm">Avboka</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
