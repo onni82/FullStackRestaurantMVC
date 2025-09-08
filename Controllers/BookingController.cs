@@ -35,7 +35,7 @@ namespace FullStackRestaurantMVC.Controllers
         public async Task<IActionResult> Create()
         {
             var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables/available");
-            var vm = new CreateBookingViewModel
+            var vm = new BookingViewModel
             {
                 Start = DateTime.Now.AddHours(1),
                 Guests = 2,
@@ -51,7 +51,7 @@ namespace FullStackRestaurantMVC.Controllers
         // POST: /Booking/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookingViewModel vm)
+        public async Task<IActionResult> Create(BookingViewModel vm)
         {
             if (!ModelState.IsValid)
             {

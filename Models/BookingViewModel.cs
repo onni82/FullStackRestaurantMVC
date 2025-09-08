@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FullStackRestaurantMVC.Models
 {
-    public class CreateBookingViewModel
+    public class BookingViewModel
     {
         public string CustomerName { get; set; } = "";
         public string PhoneNumber { get; set; } = "";
