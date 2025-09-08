@@ -1,3 +1,5 @@
+using FullStackRestaurantMVC.Services;
+
 namespace FullStackRestaurantMVC
 {
     public class Program
@@ -8,6 +10,13 @@ namespace FullStackRestaurantMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Add HttpContextAccessor if you use Session/HttpContext in Views
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSession();
+
+            // Register ApiService with HttpClient
+            builder.Services.AddHttpClient<ApiService>();
 
             var app = builder.Build();
 
