@@ -25,6 +25,7 @@
                 <td>@booking.TableId</td>
                 <td>@booking.CustomerId</td>
                 <td>
+                    <a asp-action="Details" asp-route-id="@booking.Id">Information</a> |
                     <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-danger btn-sm">Avboka</a>
                 </td>
             </tr>

@@ -1,0 +1,41 @@
+﻿@model FullStackRestaurantMVC.Models.CreateBookingViewModel
+
+@{
+    ViewData["Title"] = "Skapa bokning";
+}
+
+<h2>Skapa bokning</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="CustomerName"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Guests"></label>
+        <input asp-for="Guests" class="form-control" />
+        <span asp-validation-for="Guests" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Start"></label>
+        <input asp-for="Start" class="form-control" type="datetime-local" />
+        <span asp-validation-for="Start" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TableId">Select Table</label>
+        <select asp-for="TableId" class="form-control" asp-items="Model.AvailableTables"></select>
+        <span asp-validation-for="TableId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Boka</button>
+</form>

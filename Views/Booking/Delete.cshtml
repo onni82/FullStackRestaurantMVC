@@ -1,0 +1,22 @@
+﻿@model FullStackRestaurantMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Avbokning";
+}
+
+<h2>Avbokning</h2>
+
+<h3>Är du säker på att du vill avboka?</h3>
+<dl class="row">
+    <dt class="col-sm-2">Starttid</dt>
+    <dd class="col-sm-10">@Model.Start</dd>
+
+    <dt class="col-sm-2">Antal gäster</dt>
+    <dd class="col-sm-10">@Model.Guests</dd>
+</dl>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Avboka</button> |
+    <a asp-action="Index">Tillbaka till listan</a>
+</form>
