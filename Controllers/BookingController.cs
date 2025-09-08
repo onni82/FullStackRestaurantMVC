@@ -1,7 +1,7 @@
 ﻿using FullStackRestaurantMVC.Models;
 using FullStackRestaurantMVC.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace FullStackRestaurantMVC.Controllers
 {
@@ -14,31 +14,49 @@ namespace FullStackRestaurantMVC.Controllers
             _apiService = apiService;
         }
 
-        [HttpGet]
-        public IActionResult Create()
+        // GET: Booking
+        public async Task<IActionResult> Index()
         {
-            return View(new BookingViewModel());
+            var bookings = await _apiService.GetAsync<JsonElement[]>("api/Bookings");
+
+            var model = bookings.Select(b => new BookingViewModel
+            {
+                Id = b.GetProperty("id").GetInt32(),
+                TableId = b.GetProperty("tableId").GetInt32(),
+                TableName = b.GetProperty("tableName").GetString() ?? "Unknown", // adjust if API doesn't return name
+                CustomerId = b.GetProperty("customerId").GetInt32(),
+                CustomerName = b.GetProperty("customerName").GetString() ?? "Guest", // adjust if API doesn't return name
+                Start = b.GetProperty("start").GetDateTime(),
+                Guests = b.GetProperty("guests").GetInt32()
+            }).ToList();
+
+            return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(BookingViewModel model)
+        // GET: Booking/Create
+        public async Task<IActionResult> Create()
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            // Load available tables for dropdown
+            var tables = await _apiService.GetAsync<JsonElement[]>("api/Tables");
+            ViewBag.Tables = tables.Select(t => new { Id = t.GetProperty("id").GetInt32(), Name = t.GetProperty("name").GetString() });
 
-            var startDateTime = model.Date.Date + model.Time;
+            return View();
+        }
 
-            var bookingData = new
+        // POST: Booking/Create
+        [HttpPost]
+        public async Task<IActionResult> Create(int tableId, int guests, DateTime date, TimeSpan time)
+        {
+            var booking = new
             {
-                tableId = model.TableId,
-                customerId = model.CustomerId,
-                start = startDateTime.ToUniversalTime().ToString("o"), // ISO 8601 format
-                guests = model.Guests
+                tableId,
+                customerId = 0, // if not logged in
+                start = date.Date + time,
+                guests
             };
 
-            await _apiService.PostAsync<object>("api/Bookings", bookingData);
-
-            return RedirectToAction("Index", "Home");
+            await _apiService.PostAsync("api/Bookings", booking);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

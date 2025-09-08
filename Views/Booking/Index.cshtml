@@ -1,34 +1,45 @@
-﻿@model IEnumerable<FullStackRestaurantMVC.Models.Booking>
+﻿@model IEnumerable<FullStackRestaurantMVC.Models.BookingViewModel>
+
 @{
-    ViewData["Title"] = "Bokningar";
+    ViewData["Title"] = "Bookings";
 }
-<h1>Bokningar</h1>
-<a asp-action="Create" class="btn btn-primary mb-3">Ny bokning</a>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Start</th>
-            <th>Slut</th>
-            <th>Gäster</th>
-            <th>Bord</th>
-            <th>Kund</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var booking in Model)
-        {
+
+<h2>Bookings</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Booking</a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No bookings found.</div>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
             <tr>
-                <td>@booking.Start</td>
-                <td>@booking.End</td>
-                <td>@booking.Guests</td>
-                <td>@booking.TableId</td>
-                <td>@booking.CustomerId</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@booking.Id">Information</a> |
-                    <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-danger btn-sm">Avboka</a>
-                </td>
+                <th>Customer</th>
+                <th>Table</th>
+                <th>Start Time</th>
+                <th>Guests</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.CustomerName</td>
+                    <td>@booking.TableName</td>
+                    <td>@booking.Start.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@booking.Guests</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@booking.Id" class="btn btn-sm btn-primary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
