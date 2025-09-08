@@ -13,7 +13,12 @@ namespace FullStackRestaurantMVC
 
             // Add HttpContextAccessor if you use Session/HttpContext in Views
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddSession();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             // Register ApiService with HttpClient
             builder.Services.AddHttpClient<ApiService>();
@@ -33,7 +38,11 @@ namespace FullStackRestaurantMVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            // Enable sessions before MapControllerRoute
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
