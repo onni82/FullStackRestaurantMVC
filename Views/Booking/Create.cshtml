@@ -8,15 +8,15 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="CustomerName"></label>
-        <input asp-for="CustomerName" class="form-control" />
-        <span asp-validation-for="CustomerName" class="text-danger"></span>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -26,15 +26,15 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Start"></label>
-        <input asp-for="Start" class="form-control" type="datetime-local" />
-        <span asp-validation-for="Start" class="text-danger"></span>
+        <label asp-for="Date"></label>
+        <input asp-for="Date" type="date" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="TableId">Select Table</label>
-        <select asp-for="TableId" class="form-control" asp-items="Model.AvailableTables"></select>
-        <span asp-validation-for="TableId" class="text-danger"></span>
+        <label asp-for="Time"></label>
+        <input asp-for="Time" type="time" class="form-control" />
+        <span asp-validation-for="Time" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Boka</button>

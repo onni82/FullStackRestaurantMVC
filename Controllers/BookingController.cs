@@ -50,52 +50,25 @@ namespace FullStackRestaurantMVC.Controllers
 
         // POST: /Booking/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookingViewModel vm)
+        public async Task<IActionResult> Create(BookingViewModel model)
         {
             if (!ModelState.IsValid)
+                return View(model);
+
+            // Combine date + time into one DateTime
+            var bookingDateTime = model.Date.Date + model.Time;
+
+            var booking = new
             {
-                // reload tables if form is invalid
-                var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables/available");
-                vm.AvailableTables = tables?.Select(t => new SelectListItem
-                {
-                    Value = t.Id.ToString(),
-                    Text = $"Table {t.TableNumber} ({t.Seats} seats)"
-                }).ToList() ?? new List<SelectListItem>();
-                return View(vm);
-            }
+                Date = bookingDateTime,
+                Guests = model.Guests,
+                Name = model.Name,
+                Phone = model.Phone
+            };
 
-            // 1. Create customer
-            var customer = await _apiService.PostAsync<JsonElement>("api/Customers", new
-            {
-                Name = vm.CustomerName,
-                PhoneNumber = vm.PhoneNumber
-            });
+            await _apiService.PostAsync<object>("api/Booking", booking);
 
-            if (customer.ValueKind == JsonValueKind.Undefined)
-            {
-                ModelState.AddModelError("", "Could not create customer.");
-                return View(vm);
-            }
-
-            var customerId = customer.GetProperty("id").GetInt32();
-
-            // 2. Create booking
-            var booking = await _apiService.PostAsync<JsonElement>("api/Bookings", new
-            {
-                TableId = vm.TableId,
-                CustomerId = customerId,
-                Start = vm.Start,
-                Guests = vm.Guests
-            });
-
-            if (booking.ValueKind == JsonValueKind.Undefined)
-            {
-                ModelState.AddModelError("", "Could not create booking.");
-                return View(vm);
-            }
-
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         // GET: /Booking/Delete/5
