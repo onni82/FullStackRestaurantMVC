@@ -14,49 +14,56 @@ namespace FullStackRestaurantMVC.Controllers
             _apiService = apiService;
         }
 
-        // GET: Booking
-        public async Task<IActionResult> Index()
-        {
-            var bookings = await _apiService.GetAsync<JsonElement[]>("api/Bookings");
+        [HttpGet]
+        public IActionResult Create() => View(new BookingCreateViewModel());
 
-            var model = bookings.Select(b => new BookingViewModel
-            {
-                Id = b.GetProperty("id").GetInt32(),
-                TableId = b.GetProperty("tableId").GetInt32(),
-                TableName = b.GetProperty("tableName").GetString() ?? "Unknown", // adjust if API doesn't return name
-                CustomerId = b.GetProperty("customerId").GetInt32(),
-                CustomerName = b.GetProperty("customerName").GetString() ?? "Guest", // adjust if API doesn't return name
-                Start = b.GetProperty("start").GetDateTime(),
-                Guests = b.GetProperty("guests").GetInt32()
-            }).ToList();
-
-            return View(model);
-        }
-
-        // GET: Booking/Create
-        public async Task<IActionResult> Create()
-        {
-            // Load available tables for dropdown
-            var tables = await _apiService.GetAsync<JsonElement[]>("api/Tables");
-            ViewBag.Tables = tables.Select(t => new { Id = t.GetProperty("id").GetInt32(), Name = t.GetProperty("name").GetString() });
-
-            return View();
-        }
-
-        // POST: Booking/Create
         [HttpPost]
-        public async Task<IActionResult> Create(int tableId, int guests, DateTime date, TimeSpan time)
+        public async Task<IActionResult> Create(BookingCreateViewModel model)
         {
-            var booking = new
+            if (!ModelState.IsValid)
             {
-                tableId,
-                customerId = 0, // if not logged in
-                start = date.Date + time,
-                guests
-            };
+                ViewBag.Error = "Fyll i alla fält korrekt.";
+                return View(model);
+            }
 
-            await _apiService.PostAsync("api/Bookings", booking);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                // Combine date and time into a single DateTime
+                var start = model.Date.Date + model.Time;
+
+                // Call API to get available tables
+                var tables = await _apiService.GetAsync<JsonElement[]>(
+                    $"api/Tables/available?start={start:O}&guests={model.Guests}");
+
+                if (tables.Length == 0)
+                {
+                    ViewBag.Error = "Tyvärr, inga bord är lediga vid denna tid.";
+                    return View(model);
+                }
+
+                var tableId = tables[0].GetProperty("id").GetInt32();
+
+                // Create booking
+                var bookingPayload = new
+                {
+                    tableId,
+                    customerId = 0, // customers don't log in
+                    start = start.ToString("O"),
+                    guests = model.Guests,
+                    name = model.Name,
+                    phone = model.Phone
+                };
+
+                var result = await _apiService.PostAsync<JsonElement>("api/Bookings", bookingPayload);
+
+                ViewBag.Message = "Bokningen är registrerad! Vi ser fram emot att träffa dig.";
+                return View(new BookingCreateViewModel());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Ett fel uppstod vid bokningen: " + ex.Message;
+                return View(model);
+            }
         }
     }
 }
