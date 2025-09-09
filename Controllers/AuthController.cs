@@ -1,6 +1,7 @@
 ﻿using FullStackRestaurantMVC.Models;
 using FullStackRestaurantMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 
 namespace FullStackRestaurantMVC.Controllers
@@ -31,8 +32,18 @@ namespace FullStackRestaurantMVC.Controllers
             var token = res.GetProperty("token").GetString();
             _apiService.SetToken(token);
 
+            var handler = new JwtSecurityTokenHandler();
+            var jwtObject = handler.ReadJwtToken(token);
+
             // Spara token i session för framtida anrop
-            HttpContext.Session.SetString("JwtToken", token);
+            //HttpContext.Session.SetString("jwtToken", token);
+            HttpContext.Response.Cookies.Append("jwtToken", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = jwtObject.ValidTo
+            });
 
             return RedirectToAction("Index", "Home");
         }
@@ -40,7 +51,8 @@ namespace FullStackRestaurantMVC.Controllers
         public IActionResult Logout()
         {
             _apiService.SetToken(null);
-            HttpContext.Session.Remove("JwtToken");
+            //HttpContext.Session.Remove("jwtToken");
+            HttpContext.Response.Cookies.Delete("jwtToken");
             return RedirectToAction("Index", "Home");
         }
     }

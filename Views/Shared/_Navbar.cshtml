@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
+@{
+    var hasJwt = Context.Request.Cookies.ContainsKey("jwtToken");
+}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -15,7 +18,8 @@
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Menu" asp-action="Index">Meny</a>
                 </li>
-                @if (HttpContextAccessor.HttpContext!.Session.GetString("JwtToken") != null)
+                @* @if (HttpContextAccessor.HttpContext!.Session.GetString("JwtToken") != null) *@
+                @if (hasJwt)
                 {
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Admin" asp-action="Index">Adminvy</a>
@@ -32,7 +36,8 @@
                 }
             </ul>
             <ul class="navbar-nav">
-                @if (HttpContextAccessor.HttpContext!.Session.GetString("JwtToken") != null)
+                @* @if (HttpContextAccessor.HttpContext!.Session.GetString("JwtToken") != null) *@
+                @if (hasJwt)
                 {
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Auth" asp-action="Logout">Logga ut</a>
