@@ -21,7 +21,7 @@ namespace FullStackRestaurantMVC.Controllers
             return View();
         }
 
-        //-------- CUSTOMER MANAGEMENT --------
+        // -------- CUSTOMER MANAGEMENT --------
 
         public async Task<IActionResult> Customers()
         {
@@ -62,7 +62,7 @@ namespace FullStackRestaurantMVC.Controllers
             return RedirectToAction(nameof(Customers));
         }
 
-        //-------- BOOKING MANAGEMENT --------
+        // -------- BOOKING MANAGEMENT --------
 
         public async Task<IActionResult> Bookings()
         {
@@ -91,7 +91,7 @@ namespace FullStackRestaurantMVC.Controllers
             return View(viewModel);
         }
 
-        //-------- TABLE MANAGEMENT --------
+        // -------- TABLE MANAGEMENT --------
 
         public async Task<IActionResult> Tables()
         {
@@ -131,5 +131,44 @@ namespace FullStackRestaurantMVC.Controllers
             return RedirectToAction(nameof(Tables));
         }
 
+        // -------- MENU MANAGEMENT --------
+
+        public async Task<IActionResult> Menu()
+        {
+            var items = await _apiService.GetAsync<IEnumerable<MenuItem>>("api/MenuItems")
+                        ?? new List<MenuItem>();
+            return View(items);
+        }
+
+        [HttpGet]
+        public IActionResult CreateMenu() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMenu(MenuItem item)
+        {
+            var created = await _apiService.PostAsync<MenuItem>("api/MenuItems", item);
+            return created == null ? View(item) : RedirectToAction(nameof(Menu));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditMenu(int id)
+        {
+            var item = await _apiService.GetAsync<MenuItem>($"api/MenuItems/{id}");
+            return item == null ? NotFound() : View(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditMenu(int id, MenuItem item)
+        {
+            var ok = await _apiService.PutAsync($"api/MenuItems/{id}", item);
+            return ok ? RedirectToAction(nameof(Menu)) : View(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMenu(int id)
+        {
+            await _apiService.DeleteAsync($"api/MenuItems/{id}");
+            return RedirectToAction(nameof(Menu));
+        }
     }
 }

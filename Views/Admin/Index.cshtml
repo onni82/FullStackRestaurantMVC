@@ -1,15 +1,18 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
     ViewData["Title"] = "Admin Dashboard";
 }
 
 <h1>Admin Dashboard</h1>
 
-@if (User.Identity.IsAuthenticated)
+@if (HttpContextAccessor.HttpContext!.Session.GetString("JwtToken") != null)
 {
     <ul>
-        <li><a asp-controller="Admin" asp-action="Customers">Manage Customers</a></li>
-        <li><a asp-controller="Admin" asp-action="Bookings">Manage Bookings</a></li>
-        <li><a asp-controller="Admin" asp-action="Tables">View Tables</a></li>
+        <li><a asp-action="Bookings">Manage Bookings</a></li>
+        <li><a asp-action="Customers">Manage Customers</a></li>
+        <li><a asp-action="Tables">Manage Tables</a></li>
+        <li><a asp-action="Menu">Manage Menu</a></li>
     </ul>
 }
 else
