@@ -1,8 +1,12 @@
 ﻿using FullStackRestaurantMVC.Models;
 using FullStackRestaurantMVC.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace FullStackRestaurantMVC.Controllers
 {
@@ -35,6 +39,18 @@ namespace FullStackRestaurantMVC.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jwtObject = handler.ReadJwtToken(token);
 
+            var claims = jwtObject.Claims.ToList();
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                claimsPrincipal, new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = jwtObject.ValidTo
+                });
+
             // Spara token i session för framtida anrop
             //HttpContext.Session.SetString("jwtToken", token);
             HttpContext.Response.Cookies.Append("jwtToken", token, new CookieOptions
@@ -48,10 +64,11 @@ namespace FullStackRestaurantMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             _apiService.SetToken(null);
             //HttpContext.Session.Remove("jwtToken");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Response.Cookies.Delete("jwtToken");
             return RedirectToAction("Index", "Home");
         }

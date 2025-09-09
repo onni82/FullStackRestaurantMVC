@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FullStackRestaurantMVC.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly ApiService _apiService;
@@ -16,11 +17,11 @@ namespace FullStackRestaurantMVC.Controllers
 
         public IActionResult Index()
         {
-            var token = HttpContext.Request.Cookies["jwtToken"];
-            if (string.IsNullOrEmpty(token))
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+            //var token = HttpContext.Request.Cookies["jwtToken"];
+            //if (string.IsNullOrEmpty(token))
+            //{
+            //    return RedirectToAction("Login", "Auth");
+            //}
             // The main dashboard page
             return View();
         }
