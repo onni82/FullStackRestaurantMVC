@@ -21,6 +21,35 @@ namespace FullStackRestaurantMVC.Controllers
             return View();
         }
 
+        // -------- BOOKING MANAGEMENT --------
+
+        public async Task<IActionResult> Bookings()
+        {
+            var bookings = await _apiService.GetAsync<IEnumerable<Booking>>("api/Bookings")
+                           ?? new List<Booking>();
+
+            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers")
+                            ?? new List<Customer>();
+
+            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables")
+                         ?? new List<Table>();
+
+            var viewModel = from b in bookings
+                            join c in customers on b.CustomerId equals c.Id
+                            join t in tables on b.TableId equals t.Id
+                            select new BookingWithDetailsVM
+                            {
+                                Id = b.Id,
+                                Start = b.Start,
+                                Guests = b.Guests,
+                                CustomerName = c.Name,
+                                CustomerPhone = c.PhoneNumber,
+                                TableNumber = t.TableNumber
+                            };
+
+            return View(viewModel);
+        }
+
         // -------- CUSTOMER MANAGEMENT --------
 
         public async Task<IActionResult> Customers()
@@ -60,35 +89,6 @@ namespace FullStackRestaurantMVC.Controllers
         {
             await _apiService.DeleteAsync($"api/Customers/{id}");
             return RedirectToAction(nameof(Customers));
-        }
-
-        // -------- BOOKING MANAGEMENT --------
-
-        public async Task<IActionResult> Bookings()
-        {
-            var bookings = await _apiService.GetAsync<IEnumerable<Booking>>("api/Bookings")
-                           ?? new List<Booking>();
-
-            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers")
-                            ?? new List<Customer>();
-
-            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables")
-                         ?? new List<Table>();
-
-            var viewModel = from b in bookings
-                            join c in customers on b.CustomerId equals c.Id
-                            join t in tables on b.TableId equals t.Id
-                            select new BookingWithDetailsVM
-                            {
-                                Id = b.Id,
-                                Start = b.Start,
-                                Guests = b.Guests,
-                                CustomerName = c.Name,
-                                CustomerPhone = c.PhoneNumber,
-                                TableNumber = t.TableNumber
-                            };
-
-            return View(viewModel);
         }
 
         // -------- TABLE MANAGEMENT --------
