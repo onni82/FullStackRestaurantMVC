@@ -21,6 +21,8 @@ namespace FullStackRestaurantMVC.Controllers
             return View();
         }
 
+        //-------- CUSTOMER MANAGEMENT --------
+
         public async Task<IActionResult> Customers()
         {
             var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers")
@@ -60,6 +62,8 @@ namespace FullStackRestaurantMVC.Controllers
             return RedirectToAction(nameof(Customers));
         }
 
+        //-------- BOOKING MANAGEMENT --------
+
         public async Task<IActionResult> Bookings()
         {
             var bookings = await _apiService.GetAsync<IEnumerable<Booking>>("api/Bookings")
@@ -86,6 +90,8 @@ namespace FullStackRestaurantMVC.Controllers
 
             return View(viewModel);
         }
+
+        //-------- TABLE MANAGEMENT --------
 
         public async Task<IActionResult> Tables()
         {
