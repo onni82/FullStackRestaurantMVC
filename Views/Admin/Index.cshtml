@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <ul>
+        <li><a asp-controller="Admin" asp-action="Customers">Manage Customers</a></li>
+        <li><a asp-controller="Admin" asp-action="Bookings">Manage Bookings</a></li>
+        <li><a asp-controller="Admin" asp-action="Tables">View Tables</a></li>
+    </ul>
+}
+else
+{
+    <p>You must be logged in to access the admin dashboard.</p>
+}
