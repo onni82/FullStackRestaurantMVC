@@ -5,17 +5,9 @@
 }
 
 <h1>Admin Dashboard</h1>
-
-@if (HttpContextAccessor.HttpContext!.Session.GetString("JwtToken") != null)
-{
-    <ul>
-        <li><a asp-action="Bookings">Manage Bookings</a></li>
-        <li><a asp-action="Customers">Manage Customers</a></li>
-        <li><a asp-action="Tables">Manage Tables</a></li>
-        <li><a asp-action="Menu">Manage Menu</a></li>
-    </ul>
-}
-else
-{
-    <p>You must be logged in to access the admin dashboard.</p>
-}
+<ul>
+    <li><a asp-action="Bookings">Manage Bookings</a></li>
+    <li><a asp-action="Customers">Manage Customers</a></li>
+    <li><a asp-action="Tables">Manage Tables</a></li>
+    <li><a asp-action="Menu">Manage Menu</a></li>
+</ul>
