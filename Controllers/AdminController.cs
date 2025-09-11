@@ -150,10 +150,24 @@ namespace FullStackRestaurantMVC.Controllers
         public IActionResult CreateMenu() => View();
 
         [HttpPost]
-        public async Task<IActionResult> CreateMenu(MenuItem item)
+        public async Task<IActionResult> CreateMenu(MenuItemCreateViewModel model)
         {
-            var created = await _apiService.PostAsync<MenuItem>("api/MenuItems", item);
-            return created == null ? View(item) : RedirectToAction(nameof(Menu));
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var dto = new
+            {
+                model.Name,
+                model.Price,
+                model.Description,
+                model.IsPopular,
+                model.ImageUrl
+            };
+
+            var created = await _apiService.PostAsync<MenuItem>("api/MenuItems", dto);
+            return created == null ? View(model) : RedirectToAction(nameof(Menu));
         }
 
         [HttpGet]
