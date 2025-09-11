@@ -1,13 +1,18 @@
 ﻿@model IEnumerable<FullStackRestaurantMVC.Models.Table>
 
-<h2>Tables</h2>
-<a asp-action="CreateTable" class="btn btn-primary">Add Table</a>
+@{
+    ViewData["Title"] = "Tables";
+}
 
-<table class="table mt-3">
+<h2>Tables</h2>
+
+<a asp-action="CreateTable" class="btn btn-success mb-3">Create Table</a>
+
+<table class="table">
     <thead>
         <tr>
-            <th>Table Number</th>
-            <th>Seats</th>
+            <th>Table #</th>
+            <th>Capacity</th>
             <th></th>
         </tr>
     </thead>
@@ -16,11 +21,11 @@
         {
             <tr>
                 <td>@t.TableNumber</td>
-                <td>@t.Seats</td>
+                <td>@t.Capacity</td>
                 <td>
-                    <a asp-action="EditTable" asp-route-id="@t.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="EditTable" asp-route-id="@t.Id">Edit</a> |
                     <form asp-action="DeleteTable" asp-route-id="@t.Id" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-link">Delete</button>
                     </form>
                 </td>
             </tr>

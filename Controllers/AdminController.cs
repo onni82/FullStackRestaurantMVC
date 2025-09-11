@@ -91,6 +91,68 @@ namespace FullStackRestaurantMVC.Controllers
             return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditBooking(int id)
+        {
+            var booking = await _apiService.GetAsync<Booking>($"api/Bookings/{id}");
+            if (booking == null) return NotFound();
+
+            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers")
+                            ?? new List<Customer>();
+            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables")
+                         ?? new List<Table>();
+
+            var vm = new BookingViewModel
+            {
+                Id = booking.Id,
+                Start = booking.Start,
+                Guests = booking.Guests,
+                CustomerId = booking.CustomerId,
+                TableId = booking.TableId,
+                Customers = customers.Select(c => new CustomerViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    PhoneNumber = c.PhoneNumber
+                }),
+                Tables = tables.Select(t => new TableViewModel
+                {
+                    Id = t.Id,
+                    TableNumber = t.TableNumber,
+                    Capacity = t.Capacity
+                })
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditBooking(int id, BookingViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            var dto = new
+            {
+                vm.TableId,
+                vm.CustomerId,
+                vm.Start,
+                vm.Guests
+            };
+
+            var ok = await _apiService.PutAsync($"api/Bookings/{id}", dto);
+            return ok ? RedirectToAction(nameof(Bookings)) : View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            await _apiService.DeleteAsync($"api/Bookings/{id}");
+            return RedirectToAction(nameof(Bookings));
+        }
+
         // -------- CUSTOMER MANAGEMENT --------
 
         public async Task<IActionResult> Customers()

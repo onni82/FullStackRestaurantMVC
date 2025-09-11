@@ -1,5 +1,8 @@
-﻿@using FullStackRestaurantMVC.Models.ViewModels
-@model IEnumerable<BookingWithDetailsVM>
+﻿@model IEnumerable<FullStackRestaurantMVC.Models.ViewModels.BookingWithDetailsVM>
+
+@{
+    ViewData["Title"] = "Bookings";
+}
 
 <h2>Bookings</h2>
 
@@ -9,8 +12,9 @@
             <th>Customer</th>
             <th>Phone</th>
             <th>Table</th>
-            <th>Date & Time</th>
             <th>Guests</th>
+            <th>Start</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -20,8 +24,14 @@
                 <td>@b.CustomerName</td>
                 <td>@b.CustomerPhone</td>
                 <td>@b.TableNumber</td>
-                <td>@b.Start.ToString("g")</td>
                 <td>@b.Guests</td>
+                <td>@b.Start</td>
+                <td>
+                    <a asp-action="EditBooking" asp-route-id="@b.Id">Edit</a> |
+                    <form asp-action="DeleteBooking" asp-route-id="@b.Id" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-link">Delete</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
