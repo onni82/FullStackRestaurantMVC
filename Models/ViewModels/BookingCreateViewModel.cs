@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FullStackRestaurantMVC.Models
+namespace FullStackRestaurantMVC.Models.ViewModels
 {
     public class BookingCreateViewModel
     {

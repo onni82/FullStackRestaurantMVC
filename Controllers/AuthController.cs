@@ -1,4 +1,4 @@
-﻿using FullStackRestaurantMVC.Models;
+﻿using FullStackRestaurantMVC.Models.ViewModels;
 using FullStackRestaurantMVC.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

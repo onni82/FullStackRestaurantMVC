@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using FullStackRestaurantMVC.Models;
+using FullStackRestaurantMVC.Models.ViewModels;
 using FullStackRestaurantMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 

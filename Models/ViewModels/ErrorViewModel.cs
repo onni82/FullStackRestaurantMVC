@@ -1,4 +1,4 @@
-namespace FullStackRestaurantMVC.Models
+namespace FullStackRestaurantMVC.Models.ViewModels
 {
     public class ErrorViewModel
     {
