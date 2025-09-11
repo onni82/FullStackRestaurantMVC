@@ -1,25 +1,28 @@
-﻿@model IEnumerable<FullStackRestaurantMVC.Models.Customer>
+﻿@model IEnumerable<FullStackRestaurantMVC.Models.ViewModels.CustomerViewModel>
 
 <h2>Customers</h2>
-<a asp-action="CreateCustomer" class="btn btn-primary">Add Customer</a>
 
-<table class="table mt-3">
+<p>
+    <a asp-action="CreateCustomer" class="btn btn-primary">Add New Customer</a>
+</p>
+
+<table class="table">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Phone</th>
+            <th>Phone Number</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var c in Model)
+        @foreach (var customer in Model)
         {
             <tr>
-                <td>@c.Name</td>
-                <td>@c.PhoneNumber</td>
+                <td>@customer.Name</td>
+                <td>@customer.PhoneNumber</td>
                 <td>
-                    <a asp-action="EditCustomer" asp-route-id="@c.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <form asp-action="DeleteCustomer" asp-route-id="@c.Id" method="post" style="display:inline">
+                    <a asp-action="EditCustomer" asp-route-id="@customer.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <form asp-action="DeleteCustomer" asp-route-id="@customer.Id" method="post" style="display:inline">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </form>
                 </td>

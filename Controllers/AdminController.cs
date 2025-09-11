@@ -63,31 +63,63 @@ namespace FullStackRestaurantMVC.Controllers
             var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers")
                             ?? new List<Customer>();
 
-            return View(customers);
+            var viewModels = customers.Select(c => new CustomerViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                PhoneNumber = c.PhoneNumber
+            });
+
+            return View(viewModels);
         }
 
         [HttpGet]
-        public IActionResult CreateCustomer() => View();
+        public IActionResult CreateCustomer() => View(new CustomerViewModel());
 
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer(Customer customer)
+        public async Task<IActionResult> CreateCustomer(CustomerViewModel vm)
         {
-            var created = await _apiService.PostAsync<Customer>("api/Customers", customer);
-            return created == null ? View(customer) : RedirectToAction(nameof(Customers));
+            if (!ModelState.IsValid) return View(vm);
+
+            var dto = new
+            {
+                vm.Name,
+                vm.PhoneNumber
+            };
+
+            var created = await _apiService.PostAsync<Customer>("api/Customers", dto);
+            return created == null ? View(vm) : RedirectToAction(nameof(Customers));
         }
 
         [HttpGet]
         public async Task<IActionResult> EditCustomer(int id)
         {
             var customer = await _apiService.GetAsync<Customer>($"api/Customers/{id}");
-            return customer == null ? NotFound() : View(customer);
+            if (customer == null) return NotFound();
+
+            var vm = new CustomerViewModel
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                PhoneNumber = customer.PhoneNumber
+            };
+
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditCustomer(int id, Customer customer)
+        public async Task<IActionResult> EditCustomer(int id, CustomerViewModel vm)
         {
-            var ok = await _apiService.PutAsync($"api/Customers/{id}", customer);
-            return ok ? RedirectToAction(nameof(Customers)) : View(customer);
+            if (!ModelState.IsValid) return View(vm);
+
+            var dto = new
+            {
+                vm.Name,
+                vm.PhoneNumber
+            };
+
+            var ok = await _apiService.PutAsync($"api/Customers/{id}", dto);
+            return ok ? RedirectToAction(nameof(Customers)) : View(vm);
         }
 
         [HttpPost]
