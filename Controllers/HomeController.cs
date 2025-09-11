@@ -25,10 +25,7 @@ namespace FullStackRestaurantMVC.Controllers
                 var menuItems = await _apiService.GetAsync<List<MenuItem>>("api/MenuItems");
 
                 // Visar topp 3 som populära val
-                var popularItems = menuItems?
-                    .Where(x => x.IsPopular)
-                    .Take(3)
-                    .ToList() ?? new List<MenuItem>();
+                var popularItems = menuItems?.Where(x => x.IsPopular).ToList() ?? new List<MenuItem>();
 
                 return View(popularItems);
             }
