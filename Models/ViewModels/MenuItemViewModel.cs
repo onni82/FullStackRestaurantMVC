@@ -1,8 +1,8 @@
 ﻿namespace FullStackRestaurantMVC.Models.ViewModels
 {
-    public class MenuItemEditViewModel
+    public class MenuItemViewModel
     {
-        public int Id { get; set; }
+        public int Id { get; set; } // ignored for create
 
         public string Name { get; set; } = string.Empty;
 

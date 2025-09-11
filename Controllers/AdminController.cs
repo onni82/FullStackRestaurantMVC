@@ -182,7 +182,7 @@ namespace FullStackRestaurantMVC.Controllers
         public IActionResult CreateMenu() => View();
 
         [HttpPost]
-        public async Task<IActionResult> CreateMenu(MenuItemCreateViewModel model)
+        public async Task<IActionResult> CreateMenu(MenuItemViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -208,7 +208,7 @@ namespace FullStackRestaurantMVC.Controllers
             var item = await _apiService.GetAsync<MenuItem>($"api/MenuItems/{id}");
             if (item == null) return NotFound();
 
-            var vm = new MenuItemEditViewModel
+            var vm = new MenuItemViewModel
             {
                 Id = item.Id,
                 Name = item.Name,
@@ -222,7 +222,7 @@ namespace FullStackRestaurantMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMenu(int id, MenuItemEditViewModel model)
+        public async Task<IActionResult> EditMenu(int id, MenuItemViewModel model)
         {
             if (!ModelState.IsValid)
             {

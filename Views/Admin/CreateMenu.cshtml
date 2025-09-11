@@ -1,46 +1,9 @@
-﻿@model FullStackRestaurantMVC.Models.ViewModels.MenuItemCreateViewModel
+﻿@model FullStackRestaurantMVC.Models.ViewModels.MenuItemViewModel
 
-@{
-    ViewData["Title"] = "Create Menu Item";
-}
-
-<h2>Add Dish</h2>
+<h2>Create Menu Item</h2>
 
 <form asp-action="CreateMenu" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Price"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="IsPopular"></label>
-        <input asp-for="IsPopular" type="checkbox" class="form-check-input" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ImageUrl"></label>
-        <input asp-for="ImageUrl" class="form-control" />
-        <span asp-validation-for="ImageUrl" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success mt-2">Save</button>
+    <partial name="_MenuForm" model="Model" />
+    <button type="submit" class="btn btn-success">Create</button>
+    <a asp-action="Menu" class="btn btn-secondary">Cancel</a>
 </form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
