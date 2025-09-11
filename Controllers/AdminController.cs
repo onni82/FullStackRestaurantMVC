@@ -56,6 +56,41 @@ namespace FullStackRestaurantMVC.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CreateBooking()
+        {
+            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+
+            var vm = new BookingViewModel
+            {
+                Start = DateTime.Now,
+                Customers = customers.Select(c => new CustomerViewModel { Id = c.Id, Name = c.Name, PhoneNumber = c.PhoneNumber }),
+                Tables = tables.Select(t => new TableViewModel { Id = t.Id, TableNumber = t.TableNumber, Capacity = t.Capacity })
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateBooking(BookingViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                // refill dropdowns
+                vm.Customers = (await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers"))
+                    ?.Select(c => new CustomerViewModel { Id = c.Id, Name = c.Name, PhoneNumber = c.PhoneNumber });
+                vm.Tables = (await _apiService.GetAsync<IEnumerable<Table>>("api/Tables"))
+                    ?.Select(t => new TableViewModel { Id = t.Id, TableNumber = t.TableNumber, Capacity = t.Capacity });
+                return View(vm);
+            }
+
+            var dto = new { vm.Start, vm.Guests, vm.CustomerId, vm.TableId };
+
+            var created = await _apiService.PostAsync<Booking>("api/Bookings", dto);
+            return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
+        }
+
         // -------- CUSTOMER MANAGEMENT --------
 
         public async Task<IActionResult> Customers()
@@ -133,33 +168,57 @@ namespace FullStackRestaurantMVC.Controllers
 
         public async Task<IActionResult> Tables()
         {
-            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables")
-                         ?? new List<Table>();
-            return View(tables);
+            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+
+            var vms = tables.Select(t => new TableViewModel
+            {
+                Id = t.Id,
+                TableNumber = t.TableNumber,
+                Capacity = t.Capacity
+            });
+
+            return View(vms);
         }
 
         [HttpGet]
-        public IActionResult CreateTable() => View();
+        public IActionResult CreateTable() => View(new TableViewModel());
 
         [HttpPost]
-        public async Task<IActionResult> CreateTable(Table table)
+        public async Task<IActionResult> CreateTable(TableViewModel vm)
         {
-            var created = await _apiService.PostAsync<Table>("api/Tables", table);
-            return created == null ? View(table) : RedirectToAction(nameof(Tables));
+            if (!ModelState.IsValid) return View(vm);
+
+            var dto = new { vm.TableNumber, vm.Capacity };
+
+            var created = await _apiService.PostAsync<Table>("api/Tables", dto);
+            return created == null ? View(vm) : RedirectToAction(nameof(Tables));
         }
 
         [HttpGet]
         public async Task<IActionResult> EditTable(int id)
         {
             var table = await _apiService.GetAsync<Table>($"api/Tables/{id}");
-            return table == null ? NotFound() : View(table);
+            if (table == null) return NotFound();
+
+            var vm = new TableViewModel
+            {
+                Id = table.Id,
+                TableNumber = table.TableNumber,
+                Capacity = table.Capacity
+            };
+
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditTable(int id, Table table)
+        public async Task<IActionResult> EditTable(int id, TableViewModel vm)
         {
-            var ok = await _apiService.PutAsync($"api/Tables/{id}", table);
-            return ok ? RedirectToAction(nameof(Tables)) : View(table);
+            if (!ModelState.IsValid) return View(vm);
+
+            var dto = new { vm.TableNumber, vm.Capacity };
+
+            var ok = await _apiService.PutAsync($"api/Tables/{id}", dto);
+            return ok ? RedirectToAction(nameof(Tables)) : View(vm);
         }
 
         [HttpPost]
