@@ -174,14 +174,40 @@ namespace FullStackRestaurantMVC.Controllers
         public async Task<IActionResult> EditMenu(int id)
         {
             var item = await _apiService.GetAsync<MenuItem>($"api/MenuItems/{id}");
-            return item == null ? NotFound() : View(item);
+            if (item == null) return NotFound();
+
+            var vm = new MenuItemEditViewModel
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Price = item.Price,
+                Description = item.Description,
+                IsPopular = item.IsPopular,
+                ImageUrl = item.ImageUrl
+            };
+
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMenu(int id, MenuItem item)
+        public async Task<IActionResult> EditMenu(int id, MenuItemEditViewModel model)
         {
-            var ok = await _apiService.PutAsync($"api/MenuItems/{id}", item);
-            return ok ? RedirectToAction(nameof(Menu)) : View(item);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var dto = new
+            {
+                model.Name,
+                model.Price,
+                model.Description,
+                model.IsPopular,
+                model.ImageUrl
+            };
+
+            var ok = await _apiService.PutAsync($"api/MenuItems/{id}", dto);
+            return ok ? RedirectToAction(nameof(Menu)) : View(model);
         }
 
         [HttpPost]
