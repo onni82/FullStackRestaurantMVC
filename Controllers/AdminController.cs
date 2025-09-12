@@ -56,77 +56,99 @@ namespace FullStackRestaurantMVC.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CreateBooking()
-        {
-            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
-            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+		[HttpGet]
+		public async Task<IActionResult> CreateBooking()
+		{
+			var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+			var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
 
-            var vm = new BookingViewModel
-            {
-                Start = DateTime.Now,
-                Customers = customers.Select(c => new CustomerViewModel { Id = c.Id, Name = c.Name, PhoneNumber = c.PhoneNumber }),
-                Tables = tables.Select(t => new TableViewModel { Id = t.Id, TableNumber = t.TableNumber, Capacity = t.Capacity })
-            };
+			var vm = new BookingViewModel
+			{
+				Start = DateTime.Now,
+				Guests = 1, // default
+				Customers = customers.Select(c => new CustomerViewModel
+				{
+					Id = c.Id,
+					Name = $"{c.Name} ({c.PhoneNumber})",
+					PhoneNumber = c.PhoneNumber
+				}),
+				Tables = tables.Where(t => t.Capacity >= 1).Select(t => new TableViewModel
+				{
+					Id = t.Id,
+					TableNumber = t.TableNumber,
+					Capacity = t.Capacity
+				})
+			};
 
-            return View(vm);
-        }
+			return View(vm);
+		}
 
-        [HttpPost]
-        public async Task<IActionResult> CreateBooking(BookingViewModel vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                // refill dropdowns
-                vm.Customers = (await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers"))
-                    ?.Select(c => new CustomerViewModel { Id = c.Id, Name = c.Name, PhoneNumber = c.PhoneNumber });
-                vm.Tables = (await _apiService.GetAsync<IEnumerable<Table>>("api/Tables"))
-                    ?.Select(t => new TableViewModel { Id = t.Id, TableNumber = t.TableNumber, Capacity = t.Capacity });
-                return View(vm);
-            }
+		[HttpPost]
+		public async Task<IActionResult> CreateBooking(BookingViewModel vm)
+		{
+			if (!ModelState.IsValid)
+			{
+				var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+				var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
 
-            var dto = new { vm.Start, vm.Guests, vm.CustomerId, vm.TableId };
+				vm.Customers = customers.Select(c => new CustomerViewModel
+				{
+					Id = c.Id,
+					Name = $"{c.Name} ({c.PhoneNumber})",
+					PhoneNumber = c.PhoneNumber
+				});
 
-            var created = await _apiService.PostAsync<Booking>("api/Bookings", dto);
-            return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
-        }
+				// filter by entered guest count
+				vm.Tables = tables.Where(t => t.Capacity >= vm.Guests).Select(t => new TableViewModel
+				{
+					Id = t.Id,
+					TableNumber = t.TableNumber,
+					Capacity = t.Capacity
+				});
 
-        [HttpGet]
-        public async Task<IActionResult> EditBooking(int id)
-        {
-            var booking = await _apiService.GetAsync<Booking>($"api/Bookings/{id}");
-            if (booking == null) return NotFound();
+				return View(vm);
+			}
 
-            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers")
-                            ?? new List<Customer>();
-            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables")
-                         ?? new List<Table>();
+			var dto = new { vm.Start, vm.Guests, vm.CustomerId, vm.TableId };
+			var created = await _apiService.PostAsync<Booking>("api/Bookings", dto);
 
-            var vm = new BookingViewModel
-            {
-                Id = booking.Id,
-                Start = booking.Start,
-                Guests = booking.Guests,
-                CustomerId = booking.CustomerId,
-                TableId = booking.TableId,
-                Customers = customers.Select(c => new CustomerViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    PhoneNumber = c.PhoneNumber
-                }),
-                Tables = tables.Select(t => new TableViewModel
-                {
-                    Id = t.Id,
-                    TableNumber = t.TableNumber,
-                    Capacity = t.Capacity
-                })
-            };
+			return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
+		}
 
-            return View(vm);
-        }
+		[HttpGet]
+		public async Task<IActionResult> EditBooking(int id)
+		{
+			var booking = await _apiService.GetAsync<Booking>($"api/Bookings/{id}");
+			if (booking == null) return NotFound();
 
-        [HttpPost]
+			var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+			var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+
+			var vm = new BookingViewModel
+			{
+				Id = booking.Id,
+				Start = booking.Start,
+				Guests = booking.Guests,
+				CustomerId = booking.CustomerId,
+				TableId = booking.TableId,
+				Customers = customers.Select(c => new CustomerViewModel
+				{
+					Id = c.Id,
+					Name = $"{c.Name} ({c.PhoneNumber})",
+					PhoneNumber = c.PhoneNumber
+				}),
+				Tables = tables.Select(t => new TableViewModel
+				{
+					Id = t.Id,
+					TableNumber = t.TableNumber,
+					Capacity = t.Capacity
+				})
+			};
+
+			return View(vm);
+		}
+
+		[HttpPost]
         public async Task<IActionResult> EditBooking(int id, BookingViewModel vm)
         {
             if (!ModelState.IsValid)
