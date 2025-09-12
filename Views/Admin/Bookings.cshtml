@@ -6,7 +6,11 @@
 
 <h2>Bookings</h2>
 
-<table class="table">
+<p>
+    <a asp-action="CreateBooking" class="btn btn-success">+ Create New Booking</a>
+</p>
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Customer</th>
@@ -25,11 +29,14 @@
                 <td>@b.CustomerPhone</td>
                 <td>@b.TableNumber</td>
                 <td>@b.Guests</td>
-                <td>@b.Start</td>
+                <td>@b.Start.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>
-                    <a asp-action="EditBooking" asp-route-id="@b.Id">Edit</a> |
+                    <a asp-action="EditBooking" asp-route-id="@b.Id" class="btn btn-primary btn-sm">Edit</a>
                     <form asp-action="DeleteBooking" asp-route-id="@b.Id" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-link">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this booking?');">
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>
