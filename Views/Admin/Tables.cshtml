@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FullStackRestaurantMVC.Models.Table>
+﻿@model IEnumerable<FullStackRestaurantMVC.Models.ViewModels.TableViewModel>
 
 @{
     ViewData["Title"] = "Tables";
@@ -6,26 +6,31 @@
 
 <h2>Tables</h2>
 
-<a asp-action="CreateTable" class="btn btn-success mb-3">Create Table</a>
+<p>
+    <a asp-action="CreateTable" class="btn btn-success">+ Add New Table</a>
+</p>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>Table #</th>
+            <th>Table Number</th>
             <th>Capacity</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var t in Model)
+        @foreach (var table in Model)
         {
             <tr>
-                <td>@t.TableNumber</td>
-                <td>@t.Capacity</td>
+                <td>@table.TableNumber</td>
+                <td>@table.Capacity</td>
                 <td>
-                    <a asp-action="EditTable" asp-route-id="@t.Id">Edit</a> |
-                    <form asp-action="DeleteTable" asp-route-id="@t.Id" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-link">Delete</button>
+                    <a asp-action="EditTable" asp-route-id="@table.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <form asp-action="DeleteTable" asp-route-id="@table.Id" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this table?');">
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>
