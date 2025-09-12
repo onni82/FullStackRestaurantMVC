@@ -149,26 +149,51 @@ namespace FullStackRestaurantMVC.Controllers
 		}
 
 		[HttpPost]
-        public async Task<IActionResult> EditBooking(int id, BookingViewModel vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
+		public async Task<IActionResult> EditBooking(int id, BookingViewModel vm)
+		{
+			if (!ModelState.IsValid)
+			{
+				var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+				var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
 
-            var dto = new
-            {
-                vm.TableId,
-                vm.CustomerId,
-                vm.Start,
-                vm.Guests
-            };
+				vm.Customers = customers.Select(c => new CustomerViewModel
+				{
+					Id = c.Id,
+					Name = $"{c.Name} ({c.PhoneNumber})",
+					PhoneNumber = c.PhoneNumber
+				});
 
-            var ok = await _apiService.PutAsync($"api/Bookings/{id}", dto);
-            return ok ? RedirectToAction(nameof(Bookings)) : View(vm);
-        }
+				vm.Tables = tables.Select(t => new TableViewModel
+				{
+					Id = t.Id,
+					TableNumber = t.TableNumber,
+					Capacity = t.Capacity
+				});
 
-        [HttpPost]
+				return View(vm);
+			}
+
+			var dto = new
+			{
+				vm.Start,
+				vm.Guests,
+				vm.CustomerId,
+				vm.TableId
+			};
+
+			try
+			{
+				var ok = await _apiService.PutAsync($"api/Bookings/{id}", dto);
+				return RedirectToAction(nameof(Bookings));
+			}
+			catch (HttpRequestException ex)
+			{
+				ModelState.AddModelError(string.Empty, $"Could not update booking: {ex.Message}");
+				return View(vm);
+			}
+		}
+
+		[HttpPost]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             await _apiService.DeleteAsync($"api/Bookings/{id}");

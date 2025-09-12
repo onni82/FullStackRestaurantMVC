@@ -1,4 +1,5 @@
-﻿@model FullStackRestaurantMVC.Models.ViewModels.BookingViewModel
+﻿@using FullStackRestaurantMVC.Models.ViewModels
+@model FullStackRestaurantMVC.Models.ViewModels.BookingViewModel
 
 <div class="form-group">
     <label asp-for="Start"></label>
@@ -15,7 +16,7 @@
 <div class="form-group">
     <label asp-for="CustomerId">Customer</label>
     <select asp-for="CustomerId" class="form-control"
-            asp-items="@(new SelectList(Model.Customers, "Id", "Name", Model.CustomerId))">
+            asp-items="@(new SelectList(Model.Customers ?? Enumerable.Empty<CustomerViewModel>(), "Id", "Name", Model.CustomerId))">
         <option value="">-- Select Customer --</option>
     </select>
     <span asp-validation-for="CustomerId" class="text-danger"></span>
@@ -24,7 +25,10 @@
 <div class="form-group">
     <label asp-for="TableId">Table</label>
     <select asp-for="TableId" class="form-control"
-            asp-items="@(new SelectList(Model.Tables, "Id", "TableNumber", Model.TableId))">
+            asp-items="@(new SelectList(
+                        (Model.Tables ?? Enumerable.Empty<TableViewModel>())
+                            .Where(t => t.Capacity >= Model.Guests),
+                        "Id", "TableNumber", Model.TableId))">
         <option value="">-- Select Table --</option>
     </select>
     <span asp-validation-for="TableId" class="text-danger"></span>
