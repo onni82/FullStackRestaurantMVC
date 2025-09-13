@@ -6,14 +6,14 @@ namespace FullStackRestaurantMVC.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
-        [Range(1, 500, ErrorMessage = "Table number must be between 1 and 500.")]
-        [Display(Name = "Table Number")]
+        [Required(ErrorMessage = "Bordsnummer är obligatoriskt.")]
+        [Range(1, 500, ErrorMessage = "Bordsnumret måste vara mellan 1 och 500.")]
+        [Display(Name = "Bordsnummer")]
         public int TableNumber { get; set; }
 
-        [Required]
-        [Range(1, 20, ErrorMessage = "Capacity must be between 1 and 20.")]
-        [Display(Name = "Seats Available")]
+        [Required(ErrorMessage = "Kapacitet är obligatoriskt.")]
+        [Range(1, 20, ErrorMessage = "Kapaciteten måste vara mellan 1 och 20.")]
+        [Display(Name = "Antal platser")]
         public int Capacity { get; set; }
     }
 }

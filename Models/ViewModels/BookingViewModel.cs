@@ -6,20 +6,21 @@ namespace FullStackRestaurantMVC.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Start Time")]
+        [Required(ErrorMessage = "Starttid är obligatorisk.")]
+        [Display(Name = "Starttid")]
         public DateTime Start { get; set; }
 
-        [Required]
-        [Range(1, 20)]
+        [Required(ErrorMessage = "Antal gäster är obligatoriskt.")]
+        [Range(1, 20, ErrorMessage = "Antalet gäster måste vara mellan 1 och 20.")]
+        [Display(Name = "Antal gäster")]
         public int Guests { get; set; }
 
-        [Required]
-        [Display(Name = "Customer")]
+        [Required(ErrorMessage = "Kund måste anges.")]
+        [Display(Name = "Kund")]
         public int CustomerId { get; set; }
 
-        [Required]
-        [Display(Name = "Table")]
+        [Required(ErrorMessage = "Bord måste anges.")]
+        [Display(Name = "Bord")]
         public int TableId { get; set; }
 
         // Dropdown helpers

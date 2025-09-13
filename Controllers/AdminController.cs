@@ -188,7 +188,7 @@ namespace FullStackRestaurantMVC.Controllers
 			}
 			catch (HttpRequestException ex)
 			{
-				ModelState.AddModelError(string.Empty, $"Could not update booking: {ex.Message}");
+				ModelState.AddModelError(string.Empty, $"Kunde inte uppdatera bokningen: {ex.Message}");
 				return View(vm);
 			}
 		}

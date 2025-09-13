@@ -29,7 +29,7 @@ namespace FullStackRestaurantMVC.Controllers
 
             if (res.ValueKind == JsonValueKind.Undefined)
             {
-                ViewBag.Error = "Felaktiga inloggningsuppgifter";
+                ViewBag.Error = "Felaktiga inloggningsuppgifter.";
                 return View();
             }
 

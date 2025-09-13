@@ -31,7 +31,7 @@ namespace FullStackRestaurantMVC.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to load menu items for Home/Index.");
+                _logger.LogError(ex, "Misslyckades med att läsa in menyalternativ för Home/Index.");
                 return RedirectToAction(nameof(Error));
             }
         }
