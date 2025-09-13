@@ -1,14 +1,14 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.TableViewModel
 
 @{
-    ViewData["Title"] = "Edit Table";
+    ViewData["Title"] = "Redigera bord";
 }
 
-<h2>Edit Table</h2>
+<h2>Redigera bord</h2>
 
 <form asp-action="EditTable" method="post">
     <input type="hidden" asp-for="Id" />
     <partial name="_TableForm" model="Model" />
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Tables" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary">Spara</button>
+    <a asp-action="Tables" class="btn btn-secondary">Avbryt</a>
 </form>

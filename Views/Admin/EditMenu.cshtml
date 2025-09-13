@@ -1,10 +1,14 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.MenuItemViewModel
 
-<h2>Edit Menu Item</h2>
+@{
+    ViewData["Title"] = "Redigera rätt";
+}
+
+<h2>Redigera rätt</h2>
 
 <form asp-action="EditMenu" method="post">
     <input type="hidden" asp-for="Id" />
     <partial name="_MenuForm" model="Model" />
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Menu" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary">Spara</button>
+    <a asp-action="Menu" class="btn btn-secondary">Avbryt</a>
 </form>

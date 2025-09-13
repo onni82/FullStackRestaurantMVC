@@ -1,14 +1,14 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.BookingViewModel
 
 @{
-    ViewData["Title"] = "Create Booking";
+    ViewData["Title"] = "Skapa bokning";
 }
 
-<h2>Create Booking</h2>
+<h2>Skapa bokning</h2>
 
 <form asp-action="CreateBooking" method="post">
     <partial name="_BookingForm" model="Model" />
 
-    <button type="submit" class="btn btn-success">Create</button>
-    <a asp-action="Bookings" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-success">Skapa</button>
+    <a asp-action="Bookings" class="btn btn-secondary">Avbryt</a>
 </form>

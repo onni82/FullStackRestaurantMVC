@@ -1,6 +1,10 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.CustomerViewModel
 
-<h2>Edit Customer</h2>
+@{
+    ViewData["Title"] = "Redigera kund";
+}
+
+<h2>Redigera kund</h2>
 
 <form asp-action="EditCustomer" method="post">
     <input type="hidden" asp-for="Id" />
@@ -17,6 +21,6 @@
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-action="Customers" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-success">Spara</button>
+    <a asp-action="Customers" class="btn btn-secondary">Avbryt</a>
 </form>

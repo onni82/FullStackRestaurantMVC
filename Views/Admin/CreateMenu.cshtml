@@ -1,9 +1,13 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.MenuItemViewModel
 
-<h2>Create Menu Item</h2>
+@{
+    ViewData["Title"] = "Skapa rätt";
+}
+
+<h2>Skapa rätt</h2>
 
 <form asp-action="CreateMenu" method="post">
     <partial name="_MenuForm" model="Model" />
-    <button type="submit" class="btn btn-success">Create</button>
-    <a asp-action="Menu" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-success">Skapa</button>
+    <a asp-action="Menu" class="btn btn-secondary">Avbryt</a>
 </form>

@@ -1,6 +1,10 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.CustomerViewModel
 
-<h2>Create Customer</h2>
+@{
+    ViewData["Title"] = "Lägg till kund";
+}
+
+<h2>Lägg till kund</h2>
 
 <form asp-action="CreateCustomer" method="post">
     <div class="form-group">
@@ -15,6 +19,6 @@
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Create</button>
-    <a asp-action="Customers" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-success">Lägg till</button>
+    <a asp-action="Customers" class="btn btn-secondary">Avbryt</a>
 </form>
