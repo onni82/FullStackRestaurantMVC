@@ -64,7 +64,8 @@ namespace FullStackRestaurantMVC.Controllers
 
 			var vm = new BookingViewModel
 			{
-				Start = DateTime.Now,
+				StartDate = DateOnly.FromDateTime(DateTime.Now),
+                StartTime = TimeOnly.FromDateTime(DateTime.Now),
 				Guests = 1, // default
 				Customers = customers.Select(c => new CustomerViewModel
 				{
@@ -109,7 +110,16 @@ namespace FullStackRestaurantMVC.Controllers
 				return View(vm);
 			}
 
-			var dto = new { vm.Start, vm.Guests, vm.CustomerId, vm.TableId };
+			var startDateTime = new DateTime(
+				vm.StartDate.Year,
+				vm.StartDate.Month,
+				vm.StartDate.Day,
+				vm.StartTime.Hour,
+				vm.StartTime.Minute,
+				0
+			);
+
+			var dto = new { Start = startDateTime, vm.Guests, vm.CustomerId, vm.TableId };
 			var created = await _apiService.PostAsync<Booking>("api/Bookings", dto);
 
 			return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
@@ -173,9 +183,19 @@ namespace FullStackRestaurantMVC.Controllers
 				return View(vm);
 			}
 
+			var startDateTime = new DateTime(
+                vm.StartDate.Year,
+                vm.StartDate.Month,
+                vm.StartDate.Day,
+                vm.StartTime.Hour,
+                vm.StartTime.Minute,
+				0
+
+			);
+
 			var dto = new
 			{
-				vm.Start,
+				Start = startDateTime,
 				vm.Guests,
 				vm.CustomerId,
 				vm.TableId

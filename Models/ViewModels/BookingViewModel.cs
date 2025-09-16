@@ -6,11 +6,15 @@ namespace FullStackRestaurantMVC.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Starttid är obligatorisk.")]
-        [Display(Name = "Starttid")]
-        public DateTime Start { get; set; }
+        [Required(ErrorMessage = "Startdatum är obligatorisk.")]
+        [Display(Name = "Startdatum")]
+        public DateOnly StartDate { get; set; }
 
-        [Required(ErrorMessage = "Antal gäster är obligatoriskt.")]
+		[Required(ErrorMessage = "Starttid är obligatorisk.")]
+		[Display(Name = "Starttid")]
+		public TimeOnly StartTime { get; set; }
+
+		[Required(ErrorMessage = "Antal gäster är obligatoriskt.")]
         [Range(1, 20, ErrorMessage = "Antalet gäster måste vara mellan 1 och 20.")]
         [Display(Name = "Antal gäster")]
         public int Guests { get; set; }
