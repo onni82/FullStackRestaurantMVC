@@ -2,10 +2,30 @@
     ViewData["Title"] = "Adminpanel";
 }
 
-<h1>Adminpanel</h1>
-<ul>
-    <li><a asp-action="Bookings">Hantera bokningar</a></li>
-    <li><a asp-action="Customers">Hantera kunder</a></li>
-    <li><a asp-action="Tables">Hantera bord</a></li>
-    <li><a asp-action="Menu">Hantera meny</a></li>
-</ul>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-0">Adminpanel</h1>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a asp-action="Bookings" class="btn btn-outline-primary w-100">Hantera bokningar</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a asp-action="Customers" class="btn btn-outline-primary w-100">Hantera kunder</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a asp-action="Tables" class="btn btn-outline-primary w-100">Hantera bord</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a asp-action="Menu" class="btn btn-outline-primary w-100">Hantera meny</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
