@@ -1,30 +1,30 @@
 ﻿@model FullStackRestaurantMVC.Models.ViewModels.MenuItemViewModel
 
 <div class="form-group">
-    <label asp-for="Name"></label>
+    <label asp-for="Name">Namn</label>
     <input asp-for="Name" class="form-control" />
     <span asp-validation-for="Name" class="text-danger"></span>
 </div>
 
 <div class="form-group">
-    <label asp-for="Price"></label>
+    <label asp-for="Price">Pris</label>
     <input asp-for="Price" class="form-control" />
     <span asp-validation-for="Price" class="text-danger"></span>
 </div>
 
 <div class="form-group">
-    <label asp-for="Description"></label>
+    <label asp-for="Description">Beskrivning</label>
     <textarea asp-for="Description" class="form-control"></textarea>
     <span asp-validation-for="Description" class="text-danger"></span>
 </div>
 
 <div class="form-group form-check">
     <input asp-for="IsPopular" class="form-check-input" />
-    <label asp-for="IsPopular" class="form-check-label"></label>
+    <label asp-for="IsPopular" class="form-check-label">Populär?</label>
 </div>
 
 <div class="form-group">
-    <label asp-for="ImageUrl"></label>
+    <label asp-for="ImageUrl">Bildlänk</label>
     <input asp-for="ImageUrl" class="form-control" />
     <span asp-validation-for="ImageUrl" class="text-danger"></span>
 </div>

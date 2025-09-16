@@ -14,22 +14,22 @@
 </div>
 
 <div class="form-group">
-    <label asp-for="CustomerId">Customer</label>
+    <label asp-for="CustomerId">Kund</label>
     <select asp-for="CustomerId" class="form-control"
             asp-items="@(new SelectList(Model.Customers ?? Enumerable.Empty<CustomerViewModel>(), "Id", "Name", Model.CustomerId))">
-        <option value="">-- Select Customer --</option>
+        <option value="">-- Välj kund --</option>
     </select>
     <span asp-validation-for="CustomerId" class="text-danger"></span>
 </div>
 
 <div class="form-group">
-    <label asp-for="TableId">Table</label>
+    <label asp-for="TableId">Bord</label>
     <select asp-for="TableId" class="form-control"
             asp-items="@(new SelectList(
                         (Model.Tables ?? Enumerable.Empty<TableViewModel>())
                             .Where(t => t.Capacity >= Model.Guests),
                         "Id", "TableNumber", Model.TableId))">
-        <option value="">-- Select Table --</option>
+        <option value="">-- Välj bord --</option>
     </select>
     <span asp-validation-for="TableId" class="text-danger"></span>
 </div>
