@@ -137,7 +137,8 @@ namespace FullStackRestaurantMVC.Controllers
 			var vm = new BookingViewModel
 			{
 				Id = booking.Id,
-				Start = booking.Start,
+				StartDate = DateOnly.FromDateTime(booking.Start),
+                StartTime = TimeOnly.FromDateTime(booking.Start),
 				Guests = booking.Guests,
 				CustomerId = booking.CustomerId,
 				TableId = booking.TableId,
