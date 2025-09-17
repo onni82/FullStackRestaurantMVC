@@ -56,165 +56,165 @@ namespace FullStackRestaurantMVC.Controllers
             return View(viewModel);
         }
 
-		[HttpGet]
-		public async Task<IActionResult> CreateBooking()
-		{
-			var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
-			var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+        [HttpGet]
+        public async Task<IActionResult> CreateBooking()
+        {
+            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
 
-			var vm = new BookingViewModel
-			{
-				StartDate = DateOnly.FromDateTime(DateTime.Now),
+            var vm = new BookingViewModel
+            {
+                StartDate = DateOnly.FromDateTime(DateTime.Now),
                 StartTime = TimeOnly.FromDateTime(DateTime.Now),
-				Guests = 1, // default
-				Customers = customers.Select(c => new CustomerViewModel
-				{
-					Id = c.Id,
-					Name = $"{c.Name} ({c.PhoneNumber})",
-					PhoneNumber = c.PhoneNumber
-				}),
-				Tables = tables.Where(t => t.Capacity >= 1).Select(t => new TableViewModel
-				{
-					Id = t.Id,
-					TableNumber = t.TableNumber,
-					Capacity = t.Capacity
-				})
-			};
+                Guests = 1, // default
+                Customers = customers.Select(c => new CustomerViewModel
+                {
+                    Id = c.Id,
+                    Name = $"{c.Name} ({c.PhoneNumber})",
+                    PhoneNumber = c.PhoneNumber
+                }),
+                Tables = tables.Where(t => t.Capacity >= 1).Select(t => new TableViewModel
+                {
+                    Id = t.Id,
+                    TableNumber = t.TableNumber,
+                    Capacity = t.Capacity
+                })
+            };
 
-			return View(vm);
-		}
+            return View(vm);
+        }
 
-		[HttpPost]
-		public async Task<IActionResult> CreateBooking(BookingViewModel vm)
-		{
-			if (!ModelState.IsValid)
-			{
-				var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
-				var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+        [HttpPost]
+        public async Task<IActionResult> CreateBooking(BookingViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+                var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
 
-				vm.Customers = customers.Select(c => new CustomerViewModel
-				{
-					Id = c.Id,
-					Name = $"{c.Name} ({c.PhoneNumber})",
-					PhoneNumber = c.PhoneNumber
-				});
+                vm.Customers = customers.Select(c => new CustomerViewModel
+                {
+                    Id = c.Id,
+                    Name = $"{c.Name} ({c.PhoneNumber})",
+                    PhoneNumber = c.PhoneNumber
+                });
 
-				// filter by entered guest count
-				vm.Tables = tables.Where(t => t.Capacity >= vm.Guests).Select(t => new TableViewModel
-				{
-					Id = t.Id,
-					TableNumber = t.TableNumber,
-					Capacity = t.Capacity
-				});
+                // filter by entered guest count
+                vm.Tables = tables.Where(t => t.Capacity >= vm.Guests).Select(t => new TableViewModel
+                {
+                    Id = t.Id,
+                    TableNumber = t.TableNumber,
+                    Capacity = t.Capacity
+                });
 
-				return View(vm);
-			}
+                return View(vm);
+            }
 
-			var startDateTime = new DateTime(
-				vm.StartDate.Year,
-				vm.StartDate.Month,
-				vm.StartDate.Day,
-				vm.StartTime.Hour,
-				vm.StartTime.Minute,
-				0
-			);
-
-			var dto = new { Start = startDateTime, vm.Guests, vm.CustomerId, vm.TableId };
-			var created = await _apiService.PostAsync<Booking>("api/Bookings", dto);
-
-			return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
-		}
-
-		[HttpGet]
-		public async Task<IActionResult> EditBooking(int id)
-		{
-			var booking = await _apiService.GetAsync<Booking>($"api/Bookings/{id}");
-			if (booking == null) return NotFound();
-
-			var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
-			var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
-
-			var vm = new BookingViewModel
-			{
-				Id = booking.Id,
-				StartDate = DateOnly.FromDateTime(booking.Start),
-                StartTime = TimeOnly.FromDateTime(booking.Start),
-				Guests = booking.Guests,
-				CustomerId = booking.CustomerId,
-				TableId = booking.TableId,
-				Customers = customers.Select(c => new CustomerViewModel
-				{
-					Id = c.Id,
-					Name = $"{c.Name} ({c.PhoneNumber})",
-					PhoneNumber = c.PhoneNumber
-				}),
-				Tables = tables.Select(t => new TableViewModel
-				{
-					Id = t.Id,
-					TableNumber = t.TableNumber,
-					Capacity = t.Capacity
-				})
-			};
-
-			return View(vm);
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> EditBooking(int id, BookingViewModel vm)
-		{
-			if (!ModelState.IsValid)
-			{
-				var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
-				var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
-
-				vm.Customers = customers.Select(c => new CustomerViewModel
-				{
-					Id = c.Id,
-					Name = $"{c.Name} ({c.PhoneNumber})",
-					PhoneNumber = c.PhoneNumber
-				});
-
-				vm.Tables = tables.Select(t => new TableViewModel
-				{
-					Id = t.Id,
-					TableNumber = t.TableNumber,
-					Capacity = t.Capacity
-				});
-
-				return View(vm);
-			}
-
-			var startDateTime = new DateTime(
+            var startDateTime = new DateTime(
                 vm.StartDate.Year,
                 vm.StartDate.Month,
                 vm.StartDate.Day,
                 vm.StartTime.Hour,
                 vm.StartTime.Minute,
-				0
+                0
+            );
 
-			);
+            var dto = new { Start = startDateTime, vm.Guests, vm.CustomerId, vm.TableId };
+            var created = await _apiService.PostAsync<Booking>("api/Bookings", dto);
 
-			var dto = new
-			{
-				Start = startDateTime,
-				vm.Guests,
-				vm.CustomerId,
-				vm.TableId
-			};
+            return created == null ? View(vm) : RedirectToAction(nameof(Bookings));
+        }
 
-			try
-			{
-				var ok = await _apiService.PutAsync($"api/Bookings/{id}", dto);
-				return RedirectToAction(nameof(Bookings));
-			}
-			catch (HttpRequestException ex)
-			{
-				ModelState.AddModelError(string.Empty, $"Kunde inte uppdatera bokningen: {ex.Message}");
-				return View(vm);
-			}
-		}
+        [HttpGet]
+        public async Task<IActionResult> EditBooking(int id)
+        {
+            var booking = await _apiService.GetAsync<Booking>($"api/Bookings/{id}");
+            if (booking == null) return NotFound();
 
-		[HttpPost]
+            var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+            var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+
+            var vm = new BookingViewModel
+            {
+                Id = booking.Id,
+                StartDate = DateOnly.FromDateTime(booking.Start),
+                StartTime = TimeOnly.FromDateTime(booking.Start),
+                Guests = booking.Guests,
+                CustomerId = booking.CustomerId,
+                TableId = booking.TableId,
+                Customers = customers.Select(c => new CustomerViewModel
+                {
+                    Id = c.Id,
+                    Name = $"{c.Name} ({c.PhoneNumber})",
+                    PhoneNumber = c.PhoneNumber
+                }),
+                Tables = tables.Select(t => new TableViewModel
+                {
+                    Id = t.Id,
+                    TableNumber = t.TableNumber,
+                    Capacity = t.Capacity
+                })
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditBooking(int id, BookingViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var customers = await _apiService.GetAsync<IEnumerable<Customer>>("api/Customers") ?? new List<Customer>();
+                var tables = await _apiService.GetAsync<IEnumerable<Table>>("api/Tables") ?? new List<Table>();
+
+                vm.Customers = customers.Select(c => new CustomerViewModel
+                {
+                    Id = c.Id,
+                    Name = $"{c.Name} ({c.PhoneNumber})",
+                    PhoneNumber = c.PhoneNumber
+                });
+
+                vm.Tables = tables.Select(t => new TableViewModel
+                {
+                    Id = t.Id,
+                    TableNumber = t.TableNumber,
+                    Capacity = t.Capacity
+                });
+
+                return View(vm);
+            }
+
+            var startDateTime = new DateTime(
+                vm.StartDate.Year,
+                vm.StartDate.Month,
+                vm.StartDate.Day,
+                vm.StartTime.Hour,
+                vm.StartTime.Minute,
+                0
+
+            );
+
+            var dto = new
+            {
+                Start = startDateTime,
+                vm.Guests,
+                vm.CustomerId,
+                vm.TableId
+            };
+
+            try
+            {
+                var ok = await _apiService.PutAsync($"api/Bookings/{id}", dto);
+                return RedirectToAction(nameof(Bookings));
+            }
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Kunde inte uppdatera bokningen: {ex.Message}");
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             await _apiService.DeleteAsync($"api/Bookings/{id}");
